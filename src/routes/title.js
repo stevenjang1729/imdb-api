@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { getSeason } from "../helpers/seriesFetcher";
 import getTitle from "../helpers/getTitle";
+import getKeywords from "../helpers/getKeywords";
 
 const title = new Hono();
 
@@ -42,6 +43,18 @@ title.get("/:id/season/:seasonId", async (c) => {
     return c.json({
       message: error.message,
     });
+  }
+});
+
+title.get("/:id/keywords", async (c) => {
+  const id = c.req.param("id");
+
+  try {
+    const result = await getKeywords(id);
+    return c.json(result);
+  } catch (error) {
+    c.status(500);
+    return c.json({ message: error.message });
   }
 });
 
